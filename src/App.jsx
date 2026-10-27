@@ -1,5 +1,5 @@
 // PRESENT prototype — app shell: state, navigation, phone frame, toasts.
-import { initialDB, demoDB, at } from './data.js';
+import { initialDB, at } from './data.js';
 import { Ctx } from './ui.jsx';
 import * as O from './onboarding.jsx';
 import * as Vi from './visits.jsx';
@@ -26,20 +26,19 @@ function App() {
   const [motion, setMotion] = useState('fade');
   const [sheet, setSheet] = useState(null);
   const [toastMsg, setToastMsg] = useState(null);
-  // Shown at true size (402 × 874 CSS px) unless "Fit to window" is on. On a real phone the app fills the screen.
-  const [fitToWindow, setFitToWindow] = useState(false);
+  // Shown at true size (402 × 874 CSS px), scaled down only when the window is too small. On a real phone the app fills the screen.
   const [scale, setScale] = useState(1);
   const [onPhone, setOnPhone] = useState(false);
 
   useEffect(() => {
     const measure = () => {
       setOnPhone(window.innerWidth <= 500);
-      setScale(fitToWindow ? Math.min(1, (window.innerWidth - 32) / DEVICE_W, (window.innerHeight - 96) / DEVICE_H) : 1);
+      setScale(Math.min(1, (window.innerWidth - 32) / DEVICE_W, (window.innerHeight - 32) / DEVICE_H));
     };
     measure();
     window.addEventListener('resize', measure);
     return () => window.removeEventListener('resize', measure);
-  }, [fitToWindow]);
+  }, []);
   useEffect(() => {
     if (!toastMsg) return;
     const t = setTimeout(() => setToastMsg(null), 2800);
@@ -71,8 +70,6 @@ function App() {
     },
   };
 
-  const startOver = () => { setDb(initialDB()); setSheet(null); setMotion('fade'); setStack(go('welcome')); };
-  const demo = () => { setDb(demoDB()); setSheet(null); setMotion('fade'); setStack(go('home')); };
   const top = stack[stack.length - 1];
   const Current = SCREENS[top.name];
   const SheetC = sheet && SHEETS[sheet.name];
@@ -90,14 +87,6 @@ function App() {
   return (
     <Ctx.Provider value={app}>
       <div className="page">
-        <div className="toolbar">
-          <p><b>PRESENT</b> · {scale < 1 ? `fit to window (${Math.round(scale * 100)}%)` : 'actual size · 402 × 874'}</p>
-          <div className="toolbar-actions">
-            <button type="button" onClick={startOver}>Start over</button>
-            <button type="button" onClick={demo}>Demo account</button>
-            <button type="button" aria-pressed={fitToWindow} onClick={() => setFitToWindow(!fitToWindow)}>{fitToWindow ? 'Actual size' : 'Fit to window'}</button>
-          </div>
-        </div>
         <div className="device-slot" style={{ width: DEVICE_W * scale, height: DEVICE_H * scale }}>
           <div className="bezel" style={{ transform: `scale(${scale})` }}>{device}</div>
         </div>

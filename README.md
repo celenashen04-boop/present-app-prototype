@@ -4,7 +4,13 @@ A clickable React prototype of PRESENT, a speculative companion service for fami
 
 ## Run it
 
-Open `index.html` in a browser. It is self-contained apart from React and fonts, which load from CDNs.
+Open `index.html` in a browser. It is self-contained apart from React and fonts, which load from CDNs, and the
+home-screen icons in `icons/`. On a computer it shows just the phone; on a phone (500px wide or less) the app fills the screen.
+
+## Use it on a phone like an app
+
+Host the folder over HTTPS, open it in Safari (iPhone) or Chrome (Android), and choose Add to Home Screen.
+It then opens full screen with its own icon. `manifest.webmanifest` and the tags `build.mjs` adds to `index.html` set this up.
 
 ## Build
 

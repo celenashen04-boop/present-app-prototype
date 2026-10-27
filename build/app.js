@@ -1135,18 +1135,17 @@
     const [motion, setMotion] = useState4("fade");
     const [sheet, setSheet] = useState4(null);
     const [toastMsg, setToastMsg] = useState4(null);
-    const [fitToWindow, setFitToWindow] = useState4(false);
     const [scale, setScale] = useState4(1);
     const [onPhone, setOnPhone] = useState4(false);
     useEffect2(() => {
       const measure = () => {
         setOnPhone(window.innerWidth <= 500);
-        setScale(fitToWindow ? Math.min(1, (window.innerWidth - 32) / DEVICE_W, (window.innerHeight - 96) / DEVICE_H) : 1);
+        setScale(Math.min(1, (window.innerWidth - 32) / DEVICE_W, (window.innerHeight - 32) / DEVICE_H));
       };
       measure();
       window.addEventListener("resize", measure);
       return () => window.removeEventListener("resize", measure);
-    }, [fitToWindow]);
+    }, []);
     useEffect2(() => {
       if (!toastMsg) return;
       const t = setTimeout(() => setToastMsg(null), 2800);
@@ -1193,24 +1192,12 @@
         return id;
       }
     };
-    const startOver = () => {
-      setDb(initialDB());
-      setSheet(null);
-      setMotion("fade");
-      setStack(go("welcome"));
-    };
-    const demo = () => {
-      setDb(demoDB());
-      setSheet(null);
-      setMotion("fade");
-      setStack(go("home"));
-    };
     const top = stack[stack.length - 1];
     const Current = SCREENS[top.name];
     const SheetC = sheet && SHEETS[sheet.name];
     const device = /* @__PURE__ */ React.createElement("div", { className: "device" }, /* @__PURE__ */ React.createElement("div", { key: top.k, className: `stage ${motion}` }, /* @__PURE__ */ React.createElement(Current, { p: top.params })), SheetC && /* @__PURE__ */ React.createElement(SheetC, { key: sheet.k, p: sheet.params }), toastMsg && /* @__PURE__ */ React.createElement("div", { key: toastMsg.k, className: "toast", role: "status" }, toastMsg.msg));
     if (onPhone) return /* @__PURE__ */ React.createElement(Ctx.Provider, { value: app }, /* @__PURE__ */ React.createElement("div", { className: "phone-full" }, device));
-    return /* @__PURE__ */ React.createElement(Ctx.Provider, { value: app }, /* @__PURE__ */ React.createElement("div", { className: "page" }, /* @__PURE__ */ React.createElement("div", { className: "toolbar" }, /* @__PURE__ */ React.createElement("p", null, /* @__PURE__ */ React.createElement("b", null, "PRESENT"), " \xB7 ", scale < 1 ? `fit to window (${Math.round(scale * 100)}%)` : "actual size \xB7 402 \xD7 874"), /* @__PURE__ */ React.createElement("div", { className: "toolbar-actions" }, /* @__PURE__ */ React.createElement("button", { type: "button", onClick: startOver }, "Start over"), /* @__PURE__ */ React.createElement("button", { type: "button", onClick: demo }, "Demo account"), /* @__PURE__ */ React.createElement("button", { type: "button", "aria-pressed": fitToWindow, onClick: () => setFitToWindow(!fitToWindow) }, fitToWindow ? "Actual size" : "Fit to window"))), /* @__PURE__ */ React.createElement("div", { className: "device-slot", style: { width: DEVICE_W * scale, height: DEVICE_H * scale } }, /* @__PURE__ */ React.createElement("div", { className: "bezel", style: { transform: `scale(${scale})` } }, device))));
+    return /* @__PURE__ */ React.createElement(Ctx.Provider, { value: app }, /* @__PURE__ */ React.createElement("div", { className: "page" }, /* @__PURE__ */ React.createElement("div", { className: "device-slot", style: { width: DEVICE_W * scale, height: DEVICE_H * scale } }, /* @__PURE__ */ React.createElement("div", { className: "bezel", style: { transform: `scale(${scale})` } }, device))));
   }
   ReactDOM.createRoot(document.getElementById("root")).render(/* @__PURE__ */ React.createElement(App, null));
 })();

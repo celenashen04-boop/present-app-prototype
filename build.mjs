@@ -29,12 +29,23 @@ const body = `<div id="root"></div>
 <script>
 ${js}</script>`;
 
+// Lets the page be added to a phone's home screen and open full screen like an app. Page only: the artifact has no icon files.
+const appMeta = `<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="PRESENT">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">`;
+
 // A page to open locally, and the same content as an artifact page body.
 writeFileSync(join(root, 'index.html'), `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+${appMeta}
 ${head}
 </head>
 <body>
